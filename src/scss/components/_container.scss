@@ -1,0 +1,117 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 15px;
+
+  @media screen and (min-width: 860px) {
+    height: 100vh;
+  }
+}
+
+.certificate {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  @media screen and (max-width: 860px) {
+    align-items: center;
+    flex-direction: column;
+  }
+}
+
+.certificate__main {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-right: 50px;
+
+  @media screen and (max-width: 860px) {
+    margin-right: 0;
+    margin-bottom: 50px;
+  }
+}
+
+.certificate__list {
+  margin-bottom: 50px;
+  width: 287px;
+}
+
+.certificate__item {
+  padding: 4px 4px;
+  border: 1px solid grey;
+  text-align: start;
+  cursor: pointer;
+
+  position: relative;
+}
+.empty {
+  color: #c0c0c0;
+}
+
+.btn {
+  padding: 7px 50px;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.certificate__btn-add {
+  margin-bottom: 20px;
+}
+
+.certificate__btn-delete {
+  color: red;
+}
+
+.certificate__dnd {
+  height: 250px;
+  padding: 4px 4px;
+  border: 1px solid black;
+  cursor: pointer;
+
+  text-align: center;
+  color: #c0c0c0;
+
+  @media screen and (min-width: 860px) {
+    width: 358px;
+  }
+
+  @media screen and (max-width: 860px) {
+    max-width: 358px;
+  }
+}
+
+.dnd-active {
+  border: 1px dotted black;
+  background-color: #f5f5f5;
+}
+
+.more-info {
+  color: #151212;
+  cursor: auto;
+  text-align: start;
+}
+
+.active {
+  background-color: #e6e6e6;
+  padding-right: 20px;
+  &::after {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 50%;
+    right: 1%;
+    transform: translate(-50%, -50%);
+
+    margin: 0 auto;
+
+    width: 0;
+    height: 0;
+
+    border-left: 8px solid #151212;
+    border-right: 0px solid #151212;
+    border-bottom: 5px solid transparent;
+    border-top: 5px solid transparent;
+    clear: both;
+  }
+}
