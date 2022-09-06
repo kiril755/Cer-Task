@@ -98,16 +98,16 @@ const Container = () => {
         addCertToLocal(moreInfoObj);
         setName(name.concat(arrNames));
         Notiflix.Notify.success("Сертифікат успішно додано!");
-        localStorage.setItem(
-          "addedFilesCheck",
-          JSON.stringify(
-            JSON.parse(localStorage.getItem("addedFilesCheck")).concat(
-              files.map((file) => file.name)
-            )
-          )
-        );
       };
     });
+    localStorage.setItem(
+      "addedFilesCheck",
+      JSON.stringify(
+        JSON.parse(localStorage.getItem("addedFilesCheck")).concat(
+          files.map((file) => file.name)
+        )
+      )
+    );
   };
 
   const detailCergInfo = (el) => {
