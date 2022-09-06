@@ -59,26 +59,28 @@ const Container = () => {
       let fileReader = new FileReader();
 
       fileReader.readAsBinaryString(file);
-
       fileReader.onloadend = function () {
+        if (!window.btoa(fileReader.result).includes("gAwIBAgI")) {
+          return Notiflix.Notify.failure(
+            "Неправильна структура конверта сертифіката (очікується SEQUENCE)"
+          );
+        }
+
         const result = ASN1.decode(fileReader.result);
         if (result.typeName() !== "SEQUENCE") {
-          Notiflix.Notify.failure(
+          return Notiflix.Notify.failure(
             "Неправильна структура конверта сертифіката (очікується SEQUENCE)"
           );
         }
         const tbsCertificate = result.sub[0];
-
         let moreInfoObj = {
           commonName: "",
           issuerName: "",
           validFrom: tbsCertificate.sub[4].sub[0].content(),
           validTill: tbsCertificate.sub[4].sub[1].content(),
         };
-
         const objForCommonName = tbsCertificate.sub[5];
         const objForIssuerName = tbsCertificate.sub[3];
-
         function dataFinding(commonNameObj, issueNameobj) {
           for (const el of commonNameObj) {
             if (el.sub[0].sub[0].content().includes("commonName")) {
@@ -92,15 +94,10 @@ const Container = () => {
             }
           }
         }
-
         dataFinding(objForCommonName.sub, objForIssuerName.sub);
-
         addCertToLocal(moreInfoObj);
-
         setName(name.concat(arrNames));
-
         Notiflix.Notify.success("Сертифікат успішно додано!");
-
         localStorage.setItem(
           "addedFilesCheck",
           JSON.stringify(
