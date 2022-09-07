@@ -45,6 +45,17 @@ const Container = () => {
     }
   };
 
+  function base64ToBase16(base64) {
+    return window
+      .atob(base64)
+      .split("")
+      .map(function (aChar) {
+        return ("0" + aChar.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+      .toUpperCase();
+  }
+
   const onDropHandler = (e) => {
     startLoader();
     e.preventDefault();
@@ -56,6 +67,7 @@ const Container = () => {
       if (
         JSON.parse(localStorage.getItem("addedFilesCheck")).includes(file.name)
       ) {
+        stopLoader();
         return Notiflix.Notify.failure("Сертифікат вже додано!");
       }
 
@@ -77,10 +89,25 @@ const Container = () => {
           );
         }
 
+        ////////// Первый вариант, с проверкой только base64 кода
+        // if (
+        //   fileReader.result.length > 50
+        //     ? !window.btoa(fileReader.result.slice(0, 50)).includes("gAwIBAgI")
+        //     : !window.btoa(fileReader.result).includes("gAwIBAgI")
+        // ) {
+        //   stopLoader();
+        //   return Notiflix.Notify.failure(
+        //     "Неправильна структура конверта сертифіката (очікується SEQUENCE)"
+        //   );
+        // }
+
+        ////////// второй вариант, с проверкой только HEX кода
         if (
           fileReader.result.length > 50
-            ? !window.btoa(fileReader.result.slice(0, 50)).includes("gAwIBAgI")
-            : !window.btoa(fileReader.result).includes("gAwIBAgI")
+            ? !base64ToBase16(window.btoa(fileReader.result))
+                .slice(0, 50)
+                .includes("3082")
+            : !base64ToBase16(window.btoa(fileReader.result)).includes("3082")
         ) {
           stopLoader();
           return Notiflix.Notify.failure(
