@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import ASN1 from "@lapo/asn1js";
 import Notiflix from "notiflix";
+import { startLoader, stopLoader } from "./Loader";
 
 const Container = () => {
   const [btnActive, setBtnActive] = useState(false);
@@ -45,6 +46,7 @@ const Container = () => {
   };
 
   const onDropHandler = (e) => {
+    startLoader();
     e.preventDefault();
     let files = [...e.dataTransfer.files];
 
@@ -61,6 +63,7 @@ const Container = () => {
       fileReader.readAsBinaryString(file);
       fileReader.onloadend = function () {
         if (!fileReader.result) {
+          stopLoader();
           return Notiflix.Notify.failure(
             "Неправильна структура конверта сертифіката (очікується SEQUENCE)"
           );
@@ -71,6 +74,7 @@ const Container = () => {
             ? !window.btoa(fileReader.result.slice(0, 50)).includes("gAwIBAgI")
             : !window.btoa(fileReader.result).includes("gAwIBAgI")
         ) {
+          stopLoader();
           return Notiflix.Notify.failure(
             "Неправильна структура конверта сертифіката (очікується SEQUENCE)"
           );
@@ -78,6 +82,7 @@ const Container = () => {
 
         const result = ASN1.decode(fileReader.result);
         if (result.typeName() !== "SEQUENCE") {
+          stopLoader();
           return Notiflix.Notify.failure(
             "Неправильна структура конверта сертифіката (очікується SEQUENCE)"
           );
@@ -107,6 +112,7 @@ const Container = () => {
         dataFinding(objForCommonName.sub, objForIssuerName.sub);
         addCertToLocal(moreInfoObj);
         setName(name.concat(arrNames));
+        stopLoader();
         Notiflix.Notify.success("Сертифікат успішно додано!");
 
         localStorage.setItem(
