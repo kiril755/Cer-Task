@@ -58,6 +58,14 @@ const Container = () => {
       ) {
         return Notiflix.Notify.failure("Сертифікат вже додано!");
       }
+
+      if (file.size > 100000) {
+        stopLoader();
+        return Notiflix.Notify.failure(
+          "Неправильна структура конверта сертифіката (очікується SEQUENCE)"
+        );
+      }
+
       let fileReader = new FileReader();
 
       fileReader.readAsBinaryString(file);
