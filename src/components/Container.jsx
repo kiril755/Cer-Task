@@ -60,7 +60,17 @@ const Container = () => {
 
       fileReader.readAsBinaryString(file);
       fileReader.onloadend = function () {
-        if (!window.btoa(fileReader.result).includes("gAwIBAgI")) {
+        if (!fileReader.result) {
+          return Notiflix.Notify.failure(
+            "Неправильна структура конверта сертифіката (очікується SEQUENCE)"
+          );
+        }
+
+        if (
+          fileReader.result.length > 50
+            ? !window.btoa(fileReader.result.slice(0, 50)).includes("gAwIBAgI")
+            : !window.btoa(fileReader.result).includes("gAwIBAgI")
+        ) {
           return Notiflix.Notify.failure(
             "Неправильна структура конверта сертифіката (очікується SEQUENCE)"
           );
